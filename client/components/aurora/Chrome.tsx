@@ -138,6 +138,7 @@ export function Taskbar() {
               }
             }
           }}
+          onOpenCmd={(cwd) => { setConsoleCwd(cwd); setOpenConsole(true); }}
         />
         <Button variant="ghost" onClick={() => { setOpenManager(true); }}>📊</Button>
       </div>
@@ -199,7 +200,7 @@ export function Taskbar() {
   );
 }
 
-function PinnedBar({ onLaunch }: { onLaunch: (id: string) => void }) {
+function PinnedBar({ onLaunch, onOpenCmd }: { onLaunch: (id: string) => void; onOpenCmd: (cwd: string) => void }) {
   const [pins, setPins] = useState<string[]>([]);
   useEffect(() => {
     const read = () => setPins(JSON.parse(localStorage.getItem("aurora_pins_v1") || "[]"));
@@ -207,12 +208,27 @@ function PinnedBar({ onLaunch }: { onLaunch: (id: string) => void }) {
     const iv = setInterval(read, 800);
     return () => clearInterval(iv);
   }, []);
+  function appCwd(id: string) {
+    if (id.startsWith("gh:")) return `C:\\AuroraOS\\apps\\${id.replace(/^gh:/, "").replace(/[\\/]/g, "-")}>`;
+    return `C:\\AuroraOS\\apps\\${id}>`;
+  }
   return (
     <div className="flex items-center gap-2">
       {pins.map((id) => (
-        <Button key={id} variant="ghost" onClick={() => onLaunch(id)} title={id}>
-          {id === "browser" ? "🌐" : id === "console" ? "⌨️" : id === "settings" ? "⚙️" : id === "store" ? "🛍️" : id === "apps" ? "🗂️" : id === "files" ? "📁" : "📦"}
-        </Button>
+        <ContextMenu key={id}>
+          <ContextMenuTrigger asChild>
+            <Button variant="ghost" onClick={() => onLaunch(id)} title={id}>
+              {id === "browser" ? "🌐" : id === "console" ? "⌨️" : id === "settings" ? "⚙️" : id === "store" ? "🛍️" : id === "apps" ? "🗂️" : id === "files" ? "📁" : "📦"}
+            </Button>
+          </ContextMenuTrigger>
+          <ContextMenuContent>
+            <ContextMenuItem onClick={() => onLaunch(id)}>Open</ContextMenuItem>
+            <ContextMenuItem onClick={() => togglePin(id)}>{getPinned().includes(id) ? "Unpin from taskbar" : "Pin to taskbar"}</ContextMenuItem>
+            <ContextMenuItem onClick={() => toggleDesktopPin(id)}>{getDesktopPins().includes(id) ? "Remove from desktop" : "Pin to desktop"}</ContextMenuItem>
+            <ContextMenuSeparator />
+            <ContextMenuItem onClick={() => onOpenCmd(appCwd(id))}>Open CMD here</ContextMenuItem>
+          </ContextMenuContent>
+        </ContextMenu>
       ))}
     </div>
   );
