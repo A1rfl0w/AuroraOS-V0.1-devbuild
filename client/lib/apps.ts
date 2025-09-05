@@ -106,6 +106,28 @@ export function uninstall(id: AppId) {
   setPinned(getPinned().filter((p) => p !== id));
 }
 
+export async function ensureDefaultDevApps() {
+  const FLAG = "aurora_seeded_dev_apps_v1";
+  if (localStorage.getItem(FLAG)) return;
+  const repos = [
+    "nodejs/node",
+    "denoland/deno",
+    "oven-sh/bun",
+    "vercel/next.js",
+    "facebook/react",
+    "withastro/astro",
+    "tailwindlabs/tailwindcss",
+    "vitejs/vite",
+    "sveltejs/svelte",
+    "angular/angular",
+    "microsoft/TypeScript",
+  ];
+  for (const r of repos) {
+    try { await installGithub(`https://github.com/${r}`); } catch {}
+  }
+  localStorage.setItem(FLAG, "1");
+}
+
 export function listAllApps(): InstalledApp[] {
   const builtins: InstalledApp[] = [
     { id: "browser", name: "Browser", icon: "🌐", type: "builtin" },
