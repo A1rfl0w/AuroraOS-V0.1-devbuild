@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { TopBar, Taskbar } from "@/components/aurora/Chrome";
 import { Desktop } from "@/components/aurora/Desktop";
 import { getSettings } from "@/lib/settings";
+import { ensureDefaultDevApps } from "@/lib/apps";
 
 export default function Index() {
   const [wallpaper, setWallpaper] = useState<string>(getSettings().wallpaper);
