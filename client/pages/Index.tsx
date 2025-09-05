@@ -1,62 +1,48 @@
-import { DemoResponse } from "@shared/api";
 import { useEffect, useState } from "react";
+import { TopBar, Dock } from "@/components/aurora/Chrome";
+import { AuroraBrowser } from "@/components/aurora/Browser";
+import { getSettings } from "@/lib/settings";
 
 export default function Index() {
-  const [exampleFromServer, setExampleFromServer] = useState("");
-  // Fetch users on component mount
+  const [openBrowser, setOpenBrowser] = useState(false);
+  const [wallpaper, setWallpaper] = useState<string>(getSettings().wallpaper);
+
   useEffect(() => {
-    fetchDemo();
+    const settings = getSettings();
+    setWallpaper(settings.wallpaper);
+    const root = document.documentElement;
+    root.style.setProperty("--aurora-wallpaper", settings.wallpaper);
+    root.style.setProperty("--primary", settings.accent);
   }, []);
 
-  // Example of how to fetch data from the server (if needed)
-  const fetchDemo = async () => {
-    try {
-      const response = await fetch("/api/demo");
-      const data = (await response.json()) as DemoResponse;
-      setExampleFromServer(data.message);
-    } catch (error) {
-      console.error("Error fetching hello:", error);
-    }
-  };
-
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200">
-      <div className="text-center">
-        {/* TODO: FUSION_GENERATION_APP_PLACEHOLDER replace everything here with the actual app! */}
-        <h1 className="text-2xl font-semibold text-slate-800 flex items-center justify-center gap-3">
-          <svg
-            className="animate-spin h-8 w-8 text-slate-400"
-            viewBox="0 0 50 50"
-          >
-            <circle
-              className="opacity-30"
-              cx="25"
-              cy="25"
-              r="20"
-              stroke="currentColor"
-              strokeWidth="5"
-              fill="none"
-            />
-            <circle
-              className="text-slate-600"
-              cx="25"
-              cy="25"
-              r="20"
-              stroke="currentColor"
-              strokeWidth="5"
-              fill="none"
-              strokeDasharray="100"
-              strokeDashoffset="75"
-            />
-          </svg>
-          Generating your app...
-        </h1>
-        <p className="mt-4 text-slate-600 max-w-md">
-          Watch the chat on the left for updates that might need your attention
-          to finish generating
-        </p>
-        <p className="mt-4 hidden max-w-md">{exampleFromServer}</p>
-      </div>
+    <div className="min-h-screen text-foreground" style={{ backgroundImage: "var(--aurora-wallpaper)" }}>
+      <TopBar />
+      <main className="pt-20 px-4">
+        <section className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-8 items-center">
+          <div className="space-y-6">
+            <h1 className="text-4xl sm:text-5xl font-extrabold leading-tight">
+              AuroraOS
+              <span className="block text-lg sm:text-2xl font-semibold text-foreground/70">Inspired by TerbiumOS‑V2 and Windows — built for the web</span>
+            </h1>
+            <ul className="grid gap-2 text-sm sm:text-base text-foreground/80">
+              <li>• Built‑in proxy switching from the home screen</li>
+              <li>• Secure signup/login with passwords and security questions</li>
+              <li>• Deep customization: wallpaper, accent, density</li>
+              <li>• Beautiful desktop experience with a fast app dock</li>
+            </ul>
+          </div>
+          <div className="rounded-2xl border border-white/15 bg-white/10 backdrop-blur p-6 shadow-xl">
+            <div className="aspect-[16/10] rounded-xl border border-white/20 bg-gradient-to-br from-sky-400/30 via-indigo-400/25 to-emerald-400/25 grid place-items-center text-center p-6">
+              <p className="text-sm sm:text-base max-w-md">
+                Open the Aurora Browser from the dock below and switch proxies instantly from the top bar. Try loading example.com or httpbin.org through the proxy.
+              </p>
+            </div>
+          </div>
+        </section>
+      </main>
+      <Dock onOpenBrowser={() => setOpenBrowser(true)} />
+      <AuroraBrowser open={openBrowser} onOpenChange={setOpenBrowser} />
     </div>
   );
 }
