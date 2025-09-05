@@ -62,6 +62,7 @@ export function Taskbar() {
   const nav = useNavigate();
   const [openBrowser, setOpenBrowser] = useState(false);
   const [openConsole, setOpenConsole] = useState(false);
+  const [consoleCwd, setConsoleCwd] = useState<string | undefined>(undefined);
   const [openFiles, setOpenFiles] = useState(false);
   const [openManager, setOpenManager] = useState(false);
   const [openStart, setOpenStart] = useState(false);
