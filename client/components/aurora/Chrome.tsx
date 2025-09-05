@@ -75,6 +75,31 @@ export function Taskbar() {
     });
   }
 
+  useEffect(() => {
+    const handler = () => {
+      const id = localStorage.getItem("aurora_open_id");
+      if (!id) return;
+      if (id === "browser") setOpenBrowser(true);
+      else if (id === "console") setOpenConsole(true);
+      else if (id === "files") setOpenFiles(true);
+      else if (id === "settings") nav("/settings");
+      else if (id === "store") nav("/store");
+      else if (id === "apps") nav("/apps");
+      else if (id.startsWith("gh:")) {
+        const apps = JSON.parse(localStorage.getItem("aurora_installed_apps_v1") || "{}");
+        const app = apps[id];
+        if (app?.launchUrl) { setInitialUrl(app.launchUrl); setOpenBrowser(true); }
+      } else if (id.startsWith("bm:")) {
+        const bms = JSON.parse(localStorage.getItem("aurora_bookmarks_v1") || "[]");
+        const bm = bms.find((b: any) => `bm:${b.id}` === id);
+        if (bm) { setInitialUrl(bm.url); setOpenBrowser(true); }
+      }
+      localStorage.removeItem("aurora_open_id");
+    };
+    window.addEventListener("aurora-open", handler);
+    return () => window.removeEventListener("aurora-open", handler);
+  }, []);
+
   return (
     <>
       <div className="fixed bottom-0 inset-x-0 z-40 h-14 px-2 md:px-4 flex items-center gap-2 bg-background/70 backdrop-blur border-t border-white/10">
