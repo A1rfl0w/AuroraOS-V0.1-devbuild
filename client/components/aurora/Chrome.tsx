@@ -52,6 +52,7 @@ import { AuroraConsole } from "./Console";
 import { TaskManager, type ProcessInfo } from "./TaskManager";
 import { AuroraFiles } from "./Files";
 import { listAllApps, togglePin, getPinned, toggleDesktopPin, getDesktopPins, getBookmarks } from "@/lib/apps";
+import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuSeparator, ContextMenuTrigger } from "@/components/ui/context-menu";
 
 export function Dock({ onOpenBrowser }: { onOpenBrowser: () => void }) {
   return null;
