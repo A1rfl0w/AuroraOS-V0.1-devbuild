@@ -12,6 +12,12 @@ export function AuroraConsole({ open, onOpenChange, initialCwd }: { open: boolea
 
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }); }, [lines]);
 
+  useEffect(() => {
+    if (open && initialCwd) {
+      setCwd(initialCwd);
+    }
+  }, [open, initialCwd]);
+
   function write(text: string) { setLines((l) => [...l, { type: "out", text }]); }
 
   function handle(cmdline: string) {
