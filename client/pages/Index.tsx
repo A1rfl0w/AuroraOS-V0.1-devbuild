@@ -13,6 +13,7 @@ export default function Index() {
     const root = document.documentElement;
     root.style.setProperty("--aurora-wallpaper", settings.wallpaper);
     root.style.setProperty("--primary", settings.accent);
+    void ensureDefaultDevApps();
   }, []);
 
   return (
