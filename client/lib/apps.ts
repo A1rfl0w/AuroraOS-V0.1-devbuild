@@ -1,6 +1,6 @@
 export type AppId = string;
 
-export type BuiltinId = "browser" | "console" | "settings" | "store" | "apps";
+export type BuiltinId = "browser" | "console" | "settings" | "store" | "apps" | "files";
 
 export interface BaseApp {
   id: AppId;
@@ -10,12 +10,14 @@ export interface BaseApp {
   launchUrl?: string; // for github/external
 }
 
-const PINS_KEY = "aurora_pins_v1";
+const PINS_KEY = "aurora_pins_v1"; // taskbar pins
+const DESKTOP_KEY = "aurora_desktop_pins_v1"; // desktop shortcuts (AppId or bm:<id>)
 const APPS_KEY = "aurora_installed_apps_v1";
+const BMS_KEY = "aurora_bookmarks_v1";
 
 export function getPinned(): AppId[] {
   const raw = localStorage.getItem(PINS_KEY);
-  return raw ? (JSON.parse(raw) as AppId[]) : ["browser", "store", "settings"];
+  return raw ? (JSON.parse(raw) as AppId[]) : ["browser", "store", "settings", "files"];
 }
 
 export function setPinned(pins: AppId[]) {
@@ -26,6 +28,38 @@ export function togglePin(id: AppId) {
   const pins = getPinned();
   if (pins.includes(id)) setPinned(pins.filter((p) => p !== id));
   else setPinned([...pins, id]);
+}
+
+export function getDesktopPins(): string[] {
+  const raw = localStorage.getItem(DESKTOP_KEY);
+  return raw ? (JSON.parse(raw) as string[]) : ["browser", "store", "files"];
+}
+
+export function setDesktopPins(pins: string[]) {
+  localStorage.setItem(DESKTOP_KEY, JSON.stringify(pins));
+}
+
+export function toggleDesktopPin(id: string) {
+  const pins = getDesktopPins();
+  if (pins.includes(id)) setDesktopPins(pins.filter((p) => p !== id));
+  else setDesktopPins([...pins, id]);
+}
+
+export interface Bookmark { id: string; title: string; url: string; createdAt: string }
+export function getBookmarks(): Bookmark[] {
+  const raw = localStorage.getItem(BMS_KEY);
+  return raw ? (JSON.parse(raw) as Bookmark[]) : [];
+}
+export function addBookmark(url: string, title: string): Bookmark {
+  const bms = getBookmarks();
+  const bm = { id: Math.random().toString(36).slice(2), title, url, createdAt: new Date().toISOString() };
+  bms.unshift(bm);
+  localStorage.setItem(BMS_KEY, JSON.stringify(bms));
+  return bm;
+}
+export function removeBookmark(id: string) {
+  const bms = getBookmarks().filter((b) => b.id !== id);
+  localStorage.setItem(BMS_KEY, JSON.stringify(bms));
 }
 
 export interface InstalledApp extends BaseApp {}
@@ -40,11 +74,6 @@ export function saveInstalled(map: Record<AppId, InstalledApp>) {
 }
 
 export async function installGithub(repoUrl: string): Promise<{ ok: true; app: InstalledApp } | { ok: false; error: string }>{
-  try {
-    const m = repoUrl.match(/github.com\/(.+?)\/(.+?)(?:$|\?|#|\/) /);
-    // safer regex without trailing space
-  } catch (_) {}
-  // Robust parsing
   const url = new URL(repoUrl);
   if (url.hostname !== "github.com") return { ok: false, error: "Only GitHub repos supported for now" } as const;
   const [owner, repo] = url.pathname.replace(/^\//, "").split("/");
@@ -54,9 +83,7 @@ export async function installGithub(repoUrl: string): Promise<{ ok: true; app: I
   if (!res.ok) return { ok: false, error: `GitHub API error: ${res.status}` } as const;
   const data = (await res.json()) as any;
   const homepage: string | undefined = data.homepage || undefined;
-  const defaultBranch: string = data.default_branch;
   const ghPages = homepage && /^https?:\/\//.test(homepage) ? homepage : undefined;
-  // Fallback to repo page if no homepage
   const launchUrl = ghPages || `https://github.com/${owner}/${repo}`;
   const id: AppId = `gh:${owner}/${repo}`;
 
@@ -86,6 +113,7 @@ export function listAllApps(): InstalledApp[] {
     { id: "settings", name: "Settings", icon: "⚙️", type: "builtin" },
     { id: "store", name: "Store", icon: "🛍️", type: "builtin" },
     { id: "apps", name: "Apps", icon: "🗂️", type: "builtin" },
+    { id: "files", name: "Files", icon: "📁", type: "builtin" },
   ];
   const installed = Object.values(getInstalled());
   return [...builtins, ...installed];
