@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { getSettings, saveSettings, AuroraSettings } from "@/lib/settings";
+import { TopBar } from "@/components/aurora/Chrome";
 
 const WALLPAPERS: string[] = [
   "linear-gradient(120deg, hsl(200 90% 55% / 0.3), hsl(270 90% 60% / 0.3))",
@@ -18,8 +19,9 @@ export default function Settings() {
   }, [settings.wallpaper]);
 
   return (
-    <div className="min-h-screen pt-20 px-4 md:px-8" style={{ backgroundImage: "var(--aurora-wallpaper)" }}>
-      <div className="max-w-3xl mx-auto space-y-8">
+    <div className="min-h-screen" style={{ backgroundImage: "var(--aurora-wallpaper)" }}>
+      <TopBar />
+      <div className="max-w-3xl mx-auto space-y-8 pt-20 px-4 md:px-8">
         <h1 className="text-3xl font-bold">Aurora Settings</h1>
 
         <section className="space-y-3">
