@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { getDesktopPins, listAllApps, getBookmarks } from "@/lib/apps";
+import { getDesktopPins, listAllApps, getBookmarks, getPinned, togglePin, toggleDesktopPin } from "@/lib/apps";
+import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuSeparator, ContextMenuTrigger } from "@/components/ui/context-menu";
 
 export function Desktop({ onLaunch }: { onLaunch: (id: string) => void }) {
   const [pins, setPins] = useState<string[]>(getDesktopPins());
