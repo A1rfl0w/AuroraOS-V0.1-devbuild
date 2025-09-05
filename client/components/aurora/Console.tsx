@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 
 interface Entry { type: "in" | "out"; text: string }
 
-export function AuroraConsole({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
+export function AuroraConsole({ open, onOpenChange, initialCwd }: { open: boolean; onOpenChange: (v: boolean) => void; initialCwd?: string }) {
   const [lines, setLines] = useState<Entry[]>([{ type: "out", text: "Microsoft Windows [AuroraOS]" }, { type: "out", text: "(c) Aurora Corporation. All rights reserved." }]);
   const [cwd, setCwd] = useState<string>("C:\\Users\\Aurora>");
   const [cmd, setCmd] = useState("");
