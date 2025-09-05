@@ -72,3 +72,11 @@ export function remove(path: string, name: string) {
   saveFS(root);
   return { ok: true } as const;
 }
+
+export function readFile(path: string, name: string): { ok: true; content: string } | { ok: false; error: string } {
+  const dir = findDir(path);
+  if (!dir) return { ok: false, error: "Path not found" } as const;
+  const f = dir.children.find((c) => c.type === "file" && c.name === name) as FileNode | undefined;
+  if (!f) return { ok: false, error: "File not found" } as const;
+  return { ok: true, content: f.content } as const;
+}
