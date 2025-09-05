@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import * as fs from "@/lib/fs";
+import * as fs from "@/lib/fs.ts";
 
 export function AuroraFiles({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
   const [path, setPath] = useState<string>("/Desktop");
