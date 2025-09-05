@@ -50,7 +50,7 @@ export function TopBar() {
 import { AuroraBrowser } from "./Browser";
 import { AuroraConsole } from "./Console";
 import { TaskManager, type ProcessInfo } from "./TaskManager";
-import { AuroraFiles } from "./Files.tsx";
+import { AuroraFiles } from "./Files";
 import { listAllApps, togglePin, getPinned, toggleDesktopPin, getDesktopPins, getBookmarks } from "@/lib/apps";
 
 export function Dock({ onOpenBrowser }: { onOpenBrowser: () => void }) {
