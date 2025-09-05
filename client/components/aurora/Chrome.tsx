@@ -12,16 +12,17 @@ export function TopBar() {
 
   useEffect(() => {
     const u = getCurrentUser();
-    setUserName(u?.name ?? null);
+    setUserName(u?.username ?? null);
   }, []);
 
   return (
     <div className="fixed top-0 inset-x-0 z-40 h-14 px-4 md:px-6 flex items-center justify-between backdrop-blur bg-background/60 border-b border-white/10">
       <div className="flex items-center gap-3">
-        <AuroraLogo />
+        <button onClick={() => nav("/")}> <AuroraLogo /> </button>
         <span className="hidden sm:inline text-xs text-foreground/60">A next-gen web OS</span>
       </div>
       <div className="flex items-center gap-3">
+        <Button variant="ghost" onClick={() => nav("/")}>Home</Button>
         <ProxySwitcher />
         <Button variant="ghost" onClick={() => nav("/settings")}>Settings</Button>
         {userName ? (
