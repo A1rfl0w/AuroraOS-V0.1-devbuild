@@ -5,6 +5,10 @@ const ALLOWED_HOSTS = new Set([
   "example.com",
   "www.example.com",
   "httpbin.org",
+  "duckduckgo.com",
+  "www.duckduckgo.com",
+  "bing.com",
+  "www.bing.com",
 ]);
 
 function isAllowed(url: URL) {
