@@ -3,9 +3,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { buildProxyUrl } from "@/lib/proxy";
+import { addBookmark, toggleDesktopPin } from "@/lib/apps";
 
-export function AuroraBrowser({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
-  const [url, setUrl] = useState("https://example.com");
+export function AuroraBrowser({ open, onOpenChange, initialUrl }: { open: boolean; onOpenChange: (v: boolean) => void; initialUrl?: string }) {
+  const [url, setUrl] = useState(initialUrl ?? "https://example.com");
   const [loading, setLoading] = useState(false);
   const [html, setHtml] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
@@ -13,8 +14,15 @@ export function AuroraBrowser({ open, onOpenChange }: { open: boolean; onOpenCha
 
   useEffect(() => {
     if (!open) return;
-    void navigate(url);
-  }, [open]);
+    const u = initialUrl || localStorage.getItem("aurora_browser_initial") || url;
+    if (u) {
+      setUrl(u);
+      localStorage.removeItem("aurora_browser_initial");
+      void navigate(u);
+    } else {
+      void navigate(url);
+    }
+  }, [open, initialUrl]);
 
   async function navigate(u: string) {
     try {
@@ -48,6 +56,16 @@ export function AuroraBrowser({ open, onOpenChange }: { open: boolean; onOpenCha
           />
           <Button onClick={() => navigate(url)} disabled={loading}>
             {loading ? "Loading..." : "Go"}
+          </Button>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              const bm = addBookmark(url, url.replace(/^https?:\/\//, ""));
+              toggleDesktopPin(`bm:${bm.id}`);
+            }}
+            title="Bookmark & add to desktop"
+          >
+            🔖
           </Button>
         </div>
         {error && <p className="text-sm text-destructive mt-2">{error}</p>}
