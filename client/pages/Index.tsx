@@ -17,17 +17,27 @@ export default function Index() {
   }, []);
 
   return (
-    <div className="min-h-screen text-foreground" style={{ backgroundImage: "var(--aurora-wallpaper)" }}>
+    <div
+      className="min-h-screen text-foreground"
+      style={{ backgroundImage: "var(--aurora-wallpaper)" }}
+    >
       <TopBar />
       <main className="pt-20 px-4">
         <section className="max-w-6xl mx-auto grid lg:grid-cols-3 gap-8 items-start">
           <div className="lg:col-span-2">
-            <Desktop onLaunch={(id) => { localStorage.setItem("aurora_browser_initial", ""); localStorage.setItem("aurora_open_id", id); window.dispatchEvent(new Event("aurora-open")); }} />
+            <Desktop
+              onLaunch={(id) => {
+                localStorage.setItem("aurora_browser_initial", "");
+                localStorage.setItem("aurora_open_id", id);
+                window.dispatchEvent(new Event("aurora-open"));
+              }}
+            />
           </div>
           <div className="rounded-2xl border border-white/15 bg-white/10 backdrop-blur p-6 shadow-xl">
             <div className="aspect-[16/10] rounded-xl border border-white/20 bg-gradient-to-br from-sky-400/30 via-indigo-400/25 to-emerald-400/25 grid place-items-center text-center p-6">
               <p className="text-sm sm:text-base max-w-md">
-                Use the Start menu to launch apps, pin to taskbar/desktop, open Store and Files, and bookmark pages from the browser.
+                Use the Start menu to launch apps, pin to taskbar/desktop, open
+                Store and Files, and bookmark pages from the browser.
               </p>
             </div>
           </div>

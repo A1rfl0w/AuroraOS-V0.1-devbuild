@@ -1,11 +1,24 @@
 import { useEffect, useRef, useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { buildProxyUrl } from "@/lib/proxy";
 import { addBookmark, toggleDesktopPin } from "@/lib/apps";
 
-export function AuroraBrowser({ open, onOpenChange, initialUrl }: { open: boolean; onOpenChange: (v: boolean) => void; initialUrl?: string }) {
+export function AuroraBrowser({
+  open,
+  onOpenChange,
+  initialUrl,
+}: {
+  open: boolean;
+  onOpenChange: (v: boolean) => void;
+  initialUrl?: string;
+}) {
   const [url, setUrl] = useState(initialUrl ?? "https://example.com");
   const [loading, setLoading] = useState(false);
   const [html, setHtml] = useState<string>("");
@@ -14,7 +27,8 @@ export function AuroraBrowser({ open, onOpenChange, initialUrl }: { open: boolea
 
   useEffect(() => {
     if (!open) return;
-    const u = initialUrl || localStorage.getItem("aurora_browser_initial") || url;
+    const u =
+      initialUrl || localStorage.getItem("aurora_browser_initial") || url;
     if (u) {
       setUrl(u);
       localStorage.removeItem("aurora_browser_initial");
@@ -72,7 +86,11 @@ export function AuroraBrowser({ open, onOpenChange, initialUrl }: { open: boolea
         </div>
         {error && <p className="text-sm text-destructive mt-2">{error}</p>}
         <div className="mt-3 flex-1 overflow-hidden rounded-lg border">
-          <iframe ref={iframeRef} className="w-full h-full bg-white" srcDoc={html}></iframe>
+          <iframe
+            ref={iframeRef}
+            className="w-full h-full bg-white"
+            srcDoc={html}
+          ></iframe>
         </div>
       </DialogContent>
     </Dialog>

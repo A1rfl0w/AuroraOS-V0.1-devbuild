@@ -18,13 +18,22 @@ export function TopBar() {
   return (
     <div className="fixed top-0 inset-x-0 z-40 h-14 px-4 md:px-6 flex items-center justify-between backdrop-blur bg-background/60 border-b border-white/10">
       <div className="flex items-center gap-3">
-        <button onClick={() => nav("/")}> <AuroraLogo /> </button>
-        <span className="hidden sm:inline text-xs text-foreground/60">A next-gen web OS</span>
+        <button onClick={() => nav("/")}>
+          {" "}
+          <AuroraLogo />{" "}
+        </button>
+        <span className="hidden sm:inline text-xs text-foreground/60">
+          A next-gen web OS
+        </span>
       </div>
       <div className="flex items-center gap-3">
-        <Button variant="ghost" onClick={() => nav("/")}>Home</Button>
+        <Button variant="ghost" onClick={() => nav("/")}>
+          Home
+        </Button>
         <ProxySwitcher />
-        <Button variant="ghost" onClick={() => nav("/settings")}>Settings</Button>
+        <Button variant="ghost" onClick={() => nav("/settings")}>
+          Settings
+        </Button>
         {userName ? (
           <div className="flex items-center gap-2">
             <span className="text-sm">{userName}</span>
@@ -51,8 +60,21 @@ import { AuroraBrowser } from "./Browser";
 import { AuroraConsole } from "./Console";
 import { TaskManager, type ProcessInfo } from "./TaskManager";
 import { AuroraFiles } from "./Files";
-import { listAllApps, togglePin, getPinned, toggleDesktopPin, getDesktopPins, getBookmarks } from "@/lib/apps";
-import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuSeparator, ContextMenuTrigger } from "@/components/ui/context-menu";
+import {
+  listAllApps,
+  togglePin,
+  getPinned,
+  toggleDesktopPin,
+  getDesktopPins,
+  getBookmarks,
+} from "@/lib/apps";
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuSeparator,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu";
 
 export function Dock({ onOpenBrowser }: { onOpenBrowser: () => void }) {
   return null;
@@ -88,13 +110,23 @@ export function Taskbar() {
       else if (id === "store") nav("/store");
       else if (id === "apps") nav("/apps");
       else if (id.startsWith("gh:")) {
-        const apps = JSON.parse(localStorage.getItem("aurora_installed_apps_v1") || "{}");
+        const apps = JSON.parse(
+          localStorage.getItem("aurora_installed_apps_v1") || "{}",
+        );
         const app = apps[id];
-        if (app?.launchUrl) { setInitialUrl(app.launchUrl); setOpenBrowser(true); }
+        if (app?.launchUrl) {
+          setInitialUrl(app.launchUrl);
+          setOpenBrowser(true);
+        }
       } else if (id.startsWith("bm:")) {
-        const bms = JSON.parse(localStorage.getItem("aurora_bookmarks_v1") || "[]");
+        const bms = JSON.parse(
+          localStorage.getItem("aurora_bookmarks_v1") || "[]",
+        );
         const bm = bms.find((b: any) => `bm:${b.id}` === id);
-        if (bm) { setInitialUrl(bm.url); setOpenBrowser(true); }
+        if (bm) {
+          setInitialUrl(bm.url);
+          setOpenBrowser(true);
+        }
       }
       localStorage.removeItem("aurora_open_id");
     };
@@ -105,7 +137,13 @@ export function Taskbar() {
   return (
     <>
       <div className="fixed bottom-0 inset-x-0 z-40 h-14 px-2 md:px-4 flex items-center gap-2 bg-background/70 backdrop-blur border-t border-white/10">
-        <Button variant="secondary" className="bg-white/10 border-white/20" onClick={() => setOpenStart((v) => !v)}>Start</Button>
+        <Button
+          variant="secondary"
+          className="bg-white/10 border-white/20"
+          onClick={() => setOpenStart((v) => !v)}
+        >
+          Start
+        </Button>
         <div className="flex-1 max-w-xl">
           <input
             value={query}
@@ -130,7 +168,9 @@ export function Taskbar() {
             else if (id === "apps") nav("/apps");
             else if (id === "files") setOpenFiles(true);
             else if (id.startsWith("gh:")) {
-              const apps = JSON.parse(localStorage.getItem("aurora_installed_apps_v1") || "{}");
+              const apps = JSON.parse(
+                localStorage.getItem("aurora_installed_apps_v1") || "{}",
+              );
               const app = apps[id];
               if (app?.launchUrl) {
                 setInitialUrl(app.launchUrl);
@@ -138,9 +178,19 @@ export function Taskbar() {
               }
             }
           }}
-          onOpenCmd={(cwd) => { setConsoleCwd(cwd); setOpenConsole(true); }}
+          onOpenCmd={(cwd) => {
+            setConsoleCwd(cwd);
+            setOpenConsole(true);
+          }}
         />
-        <Button variant="ghost" onClick={() => { setOpenManager(true); }}>📊</Button>
+        <Button
+          variant="ghost"
+          onClick={() => {
+            setOpenManager(true);
+          }}
+        >
+          📊
+        </Button>
       </div>
 
       {openStart && (
@@ -155,7 +205,9 @@ export function Taskbar() {
             else if (id === "store") nav("/store");
             else if (id === "apps") nav("/apps");
             else if (id.startsWith("gh:")) {
-              const apps = JSON.parse(localStorage.getItem("aurora_installed_apps_v1") || "{}");
+              const apps = JSON.parse(
+                localStorage.getItem("aurora_installed_apps_v1") || "{}",
+              );
               const app = apps[id];
               if (app?.launchUrl) {
                 setInitialUrl(app.launchUrl);
@@ -183,10 +235,7 @@ export function Taskbar() {
         }}
         initialCwd={consoleCwd}
       />
-      <AuroraFiles
-        open={openFiles}
-        onOpenChange={(v) => setOpenFiles(v)}
-      />
+      <AuroraFiles open={openFiles} onOpenChange={(v) => setOpenFiles(v)} />
       <TaskManager
         open={openManager}
         onOpenChange={setOpenManager}
@@ -200,16 +249,24 @@ export function Taskbar() {
   );
 }
 
-function PinnedBar({ onLaunch, onOpenCmd }: { onLaunch: (id: string) => void; onOpenCmd: (cwd: string) => void }) {
+function PinnedBar({
+  onLaunch,
+  onOpenCmd,
+}: {
+  onLaunch: (id: string) => void;
+  onOpenCmd: (cwd: string) => void;
+}) {
   const [pins, setPins] = useState<string[]>([]);
   useEffect(() => {
-    const read = () => setPins(JSON.parse(localStorage.getItem("aurora_pins_v1") || "[]"));
+    const read = () =>
+      setPins(JSON.parse(localStorage.getItem("aurora_pins_v1") || "[]"));
     read();
     const iv = setInterval(read, 800);
     return () => clearInterval(iv);
   }, []);
   function appCwd(id: string) {
-    if (id.startsWith("gh:")) return `C:\\AuroraOS\\apps\\${id.replace(/^gh:/, "").replace(/[\\/]/g, "-")}>`;
+    if (id.startsWith("gh:"))
+      return `C:\\AuroraOS\\apps\\${id.replace(/^gh:/, "").replace(/[\\/]/g, "-")}>`;
     return `C:\\AuroraOS\\apps\\${id}>`;
   }
   return (
@@ -218,15 +275,37 @@ function PinnedBar({ onLaunch, onOpenCmd }: { onLaunch: (id: string) => void; on
         <ContextMenu key={id}>
           <ContextMenuTrigger asChild>
             <Button variant="ghost" onClick={() => onLaunch(id)} title={id}>
-              {id === "browser" ? "🌐" : id === "console" ? "⌨️" : id === "settings" ? "⚙️" : id === "store" ? "🛍️" : id === "apps" ? "🗂️" : id === "files" ? "📁" : "📦"}
+              {id === "browser"
+                ? "🌐"
+                : id === "console"
+                  ? "⌨️"
+                  : id === "settings"
+                    ? "⚙️"
+                    : id === "store"
+                      ? "🛍️"
+                      : id === "apps"
+                        ? "🗂️"
+                        : id === "files"
+                          ? "📁"
+                          : "📦"}
             </Button>
           </ContextMenuTrigger>
           <ContextMenuContent>
             <ContextMenuItem onClick={() => onLaunch(id)}>Open</ContextMenuItem>
-            <ContextMenuItem onClick={() => togglePin(id)}>{getPinned().includes(id) ? "Unpin from taskbar" : "Pin to taskbar"}</ContextMenuItem>
-            <ContextMenuItem onClick={() => toggleDesktopPin(id)}>{getDesktopPins().includes(id) ? "Remove from desktop" : "Pin to desktop"}</ContextMenuItem>
+            <ContextMenuItem onClick={() => togglePin(id)}>
+              {getPinned().includes(id)
+                ? "Unpin from taskbar"
+                : "Pin to taskbar"}
+            </ContextMenuItem>
+            <ContextMenuItem onClick={() => toggleDesktopPin(id)}>
+              {getDesktopPins().includes(id)
+                ? "Remove from desktop"
+                : "Pin to desktop"}
+            </ContextMenuItem>
             <ContextMenuSeparator />
-            <ContextMenuItem onClick={() => onOpenCmd(appCwd(id))}>Open CMD here</ContextMenuItem>
+            <ContextMenuItem onClick={() => onOpenCmd(appCwd(id))}>
+              Open CMD here
+            </ContextMenuItem>
           </ContextMenuContent>
         </ContextMenu>
       ))}
@@ -234,7 +313,13 @@ function PinnedBar({ onLaunch, onOpenCmd }: { onLaunch: (id: string) => void; on
   );
 }
 
-function StartMenu({ onClose, onLaunch }: { onClose: () => void; onLaunch: (id: string) => void }) {
+function StartMenu({
+  onClose,
+  onLaunch,
+}: {
+  onClose: () => void;
+  onLaunch: (id: string) => void;
+}) {
   const [apps, setApps] = useState(listAllApps());
   const [pins, setPins] = useState<string[]>(getPinned());
   const [desk, setDesk] = useState<string[]>(getDesktopPins());
@@ -251,20 +336,46 @@ function StartMenu({ onClose, onLaunch }: { onClose: () => void; onLaunch: (id: 
   }, []);
 
   return (
-    <div className="fixed bottom-14 left-2 z-50 w-[720px] max-w-[calc(100vw-1rem)] rounded-xl border border-white/15 bg-background/90 backdrop-blur shadow-2xl p-4" onMouseLeave={onClose}>
+    <div
+      className="fixed bottom-14 left-2 z-50 w-[720px] max-w-[calc(100vw-1rem)] rounded-xl border border-white/15 bg-background/90 backdrop-blur shadow-2xl p-4"
+      onMouseLeave={onClose}
+    >
       <div className="grid grid-cols-3 gap-3">
         <div className="col-span-2">
           <h3 className="text-sm mb-2">Apps</h3>
           <div className="grid grid-cols-3 gap-2">
             {apps.map((a) => (
-              <div key={a.id} className="rounded border p-2 flex flex-col gap-2">
+              <div
+                key={a.id}
+                className="rounded border p-2 flex flex-col gap-2"
+              >
                 <button className="text-left" onClick={() => onLaunch(a.id)}>
-                  <div className="text-xl" aria-hidden>{a.icon}</div>
+                  <div className="text-xl" aria-hidden>
+                    {a.icon}
+                  </div>
                   <div className="text-sm font-medium truncate">{a.name}</div>
                 </button>
                 <div className="flex gap-2">
-                  <Button size="sm" variant="secondary" onClick={() => { togglePin(a.id); setPins(getPinned()); }}>{pins.includes(a.id) ? "Unpin" : "Pin"}</Button>
-                  <Button size="sm" variant="secondary" onClick={() => { toggleDesktopPin(a.id); setDesk(getDesktopPins()); }}>{desk.includes(a.id) ? "Un‑desktop" : "Desktop"}</Button>
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    onClick={() => {
+                      togglePin(a.id);
+                      setPins(getPinned());
+                    }}
+                  >
+                    {pins.includes(a.id) ? "Unpin" : "Pin"}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    onClick={() => {
+                      toggleDesktopPin(a.id);
+                      setDesk(getDesktopPins());
+                    }}
+                  >
+                    {desk.includes(a.id) ? "Un‑desktop" : "Desktop"}
+                  </Button>
                 </div>
               </div>
             ))}
@@ -273,17 +384,32 @@ function StartMenu({ onClose, onLaunch }: { onClose: () => void; onLaunch: (id: 
         <div>
           <h3 className="text-sm mb-2">Bookmarks</h3>
           <div className="space-y-2 max-h-64 overflow-auto pr-1">
-            {bms.length === 0 && <p className="text-xs text-muted-foreground">No bookmarks yet</p>}
+            {bms.length === 0 && (
+              <p className="text-xs text-muted-foreground">No bookmarks yet</p>
+            )}
             {bms.map((b) => (
-              <button key={b.id} className="w-full rounded border p-2 text-left hover:bg-white/5" onClick={() => { onLaunch("browser"); localStorage.setItem("aurora_browser_initial", b.url); }}>
+              <button
+                key={b.id}
+                className="w-full rounded border p-2 text-left hover:bg-white/5"
+                onClick={() => {
+                  onLaunch("browser");
+                  localStorage.setItem("aurora_browser_initial", b.url);
+                }}
+              >
                 <div className="text-xs truncate">{b.title}</div>
-                <div className="text-[10px] text-muted-foreground truncate">{b.url}</div>
+                <div className="text-[10px] text-muted-foreground truncate">
+                  {b.url}
+                </div>
               </button>
             ))}
           </div>
           <div className="mt-3 grid grid-cols-2 gap-2">
-            <Button size="sm" onClick={() => onLaunch("store")}>Open Store</Button>
-            <Button size="sm" onClick={() => onLaunch("files")}>Open Files</Button>
+            <Button size="sm" onClick={() => onLaunch("store")}>
+              Open Store
+            </Button>
+            <Button size="sm" onClick={() => onLaunch("files")}>
+              Open Files
+            </Button>
           </div>
         </div>
       </div>

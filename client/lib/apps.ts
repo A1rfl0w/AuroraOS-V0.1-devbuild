@@ -1,6 +1,12 @@
 export type AppId = string;
 
-export type BuiltinId = "browser" | "console" | "settings" | "store" | "apps" | "files";
+export type BuiltinId =
+  | "browser"
+  | "console"
+  | "settings"
+  | "store"
+  | "apps"
+  | "files";
 
 export interface BaseApp {
   id: AppId;
@@ -17,7 +23,9 @@ const BMS_KEY = "aurora_bookmarks_v1";
 
 export function getPinned(): AppId[] {
   const raw = localStorage.getItem(PINS_KEY);
-  return raw ? (JSON.parse(raw) as AppId[]) : ["browser", "store", "settings", "files"];
+  return raw
+    ? (JSON.parse(raw) as AppId[])
+    : ["browser", "store", "settings", "files"];
 }
 
 export function setPinned(pins: AppId[]) {
@@ -45,14 +53,24 @@ export function toggleDesktopPin(id: string) {
   else setDesktopPins([...pins, id]);
 }
 
-export interface Bookmark { id: string; title: string; url: string; createdAt: string }
+export interface Bookmark {
+  id: string;
+  title: string;
+  url: string;
+  createdAt: string;
+}
 export function getBookmarks(): Bookmark[] {
   const raw = localStorage.getItem(BMS_KEY);
   return raw ? (JSON.parse(raw) as Bookmark[]) : [];
 }
 export function addBookmark(url: string, title: string): Bookmark {
   const bms = getBookmarks();
-  const bm = { id: Math.random().toString(36).slice(2), title, url, createdAt: new Date().toISOString() };
+  const bm = {
+    id: Math.random().toString(36).slice(2),
+    title,
+    url,
+    createdAt: new Date().toISOString(),
+  };
   bms.unshift(bm);
   localStorage.setItem(BMS_KEY, JSON.stringify(bms));
   return bm;
@@ -73,17 +91,23 @@ export function saveInstalled(map: Record<AppId, InstalledApp>) {
   localStorage.setItem(APPS_KEY, JSON.stringify(map));
 }
 
-export async function installGithub(repoUrl: string): Promise<{ ok: true; app: InstalledApp } | { ok: false; error: string }>{
+export async function installGithub(
+  repoUrl: string,
+): Promise<{ ok: true; app: InstalledApp } | { ok: false; error: string }> {
   const url = new URL(repoUrl);
-  if (url.hostname !== "github.com") return { ok: false, error: "Only GitHub repos supported for now" } as const;
+  if (url.hostname !== "github.com")
+    return { ok: false, error: "Only GitHub repos supported for now" } as const;
   const [owner, repo] = url.pathname.replace(/^\//, "").split("/");
-  if (!owner || !repo) return { ok: false, error: "Invalid GitHub repository URL" } as const;
+  if (!owner || !repo)
+    return { ok: false, error: "Invalid GitHub repository URL" } as const;
   const api = `https://api.github.com/repos/${owner}/${repo}`;
   const res = await fetch(api);
-  if (!res.ok) return { ok: false, error: `GitHub API error: ${res.status}` } as const;
+  if (!res.ok)
+    return { ok: false, error: `GitHub API error: ${res.status}` } as const;
   const data = (await res.json()) as any;
   const homepage: string | undefined = data.homepage || undefined;
-  const ghPages = homepage && /^https?:\/\//.test(homepage) ? homepage : undefined;
+  const ghPages =
+    homepage && /^https?:\/\//.test(homepage) ? homepage : undefined;
   const launchUrl = ghPages || `https://github.com/${owner}/${repo}`;
   const id: AppId = `gh:${owner}/${repo}`;
 
@@ -123,7 +147,9 @@ export async function ensureDefaultDevApps() {
     "microsoft/TypeScript",
   ];
   for (const r of repos) {
-    try { await installGithub(`https://github.com/${r}`); } catch {}
+    try {
+      await installGithub(`https://github.com/${r}`);
+    } catch {}
   }
   localStorage.setItem(FLAG, "1");
 }

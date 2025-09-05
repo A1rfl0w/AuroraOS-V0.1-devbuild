@@ -1,6 +1,19 @@
 import { useEffect, useState } from "react";
-import { getDesktopPins, listAllApps, getBookmarks, getPinned, togglePin, toggleDesktopPin } from "@/lib/apps";
-import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuSeparator, ContextMenuTrigger } from "@/components/ui/context-menu";
+import {
+  getDesktopPins,
+  listAllApps,
+  getBookmarks,
+  getPinned,
+  togglePin,
+  toggleDesktopPin,
+} from "@/lib/apps";
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuSeparator,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu";
 
 export function Desktop({ onLaunch }: { onLaunch: (id: string) => void }) {
   const [pins, setPins] = useState<string[]>(getDesktopPins());
@@ -31,16 +44,27 @@ export function Desktop({ onLaunch }: { onLaunch: (id: string) => void }) {
         return (
           <ContextMenu key={id}>
             <ContextMenuTrigger asChild>
-              <button onDoubleClick={() => onLaunch(id)} className="w-24 h-24 rounded-lg bg-white/10 hover:bg-white/15 border border-white/20 hover:border-white/30 backdrop-blur flex flex-col items-center justify-center gap-2 text-center shadow-sm">
-                <span className="text-2xl" aria-hidden>{icon}</span>
+              <button
+                onDoubleClick={() => onLaunch(id)}
+                className="w-24 h-24 rounded-lg bg-white/10 hover:bg-white/15 border border-white/20 hover:border-white/30 backdrop-blur flex flex-col items-center justify-center gap-2 text-center shadow-sm"
+              >
+                <span className="text-2xl" aria-hidden>
+                  {icon}
+                </span>
                 <span className="text-xs line-clamp-2">{name}</span>
               </button>
             </ContextMenuTrigger>
             <ContextMenuContent>
-              <ContextMenuItem onClick={() => onLaunch(id)}>Open</ContextMenuItem>
-              <ContextMenuItem onClick={() => togglePin(id)}>{pinnedToTaskbar ? "Unpin from taskbar" : "Pin to taskbar"}</ContextMenuItem>
+              <ContextMenuItem onClick={() => onLaunch(id)}>
+                Open
+              </ContextMenuItem>
+              <ContextMenuItem onClick={() => togglePin(id)}>
+                {pinnedToTaskbar ? "Unpin from taskbar" : "Pin to taskbar"}
+              </ContextMenuItem>
               <ContextMenuSeparator />
-              <ContextMenuItem onClick={() => toggleDesktopPin(id)}>Remove from desktop</ContextMenuItem>
+              <ContextMenuItem onClick={() => toggleDesktopPin(id)}>
+                Remove from desktop
+              </ContextMenuItem>
             </ContextMenuContent>
           </ContextMenu>
         );
