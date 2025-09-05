@@ -28,7 +28,9 @@ export function AuroraBrowser({ open, onOpenChange, initialUrl }: { open: boolea
     try {
       setLoading(true);
       setError(null);
-      const proxyUrl = buildProxyUrl(u);
+      const normalized = /^https?:\/\//i.test(u) ? u : `https://${u}`;
+      setUrl(normalized);
+      const proxyUrl = buildProxyUrl(normalized);
       const res = await fetch(proxyUrl);
       const text = await res.text();
       setHtml(text);
