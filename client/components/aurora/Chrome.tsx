@@ -178,7 +178,9 @@ export function Taskbar() {
         onOpenChange={(v) => {
           setOpenConsole(v);
           track("console", "Command Prompt", v);
+          if (!v) setConsoleCwd(undefined);
         }}
+        initialCwd={consoleCwd}
       />
       <AuroraFiles
         open={openFiles}
