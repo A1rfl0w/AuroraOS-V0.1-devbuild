@@ -24,14 +24,25 @@ export function Desktop({ onLaunch }: { onLaunch: (id: string) => void }) {
   }
 
   return (
-    <div className="grid gap-4 p-6 max-w-sm">
+    <div className="min-h-[calc(100vh-6rem)] p-6 w-48 grid grid-cols-1 auto-rows-[96px] gap-4">
       {pins.map((id) => {
         const { icon, name } = labelFor(id);
+        const pinnedToTaskbar = getPinned().includes(id);
         return (
-          <button key={id} onDoubleClick={() => onLaunch(id)} className="w-24 h-24 rounded-lg bg-white/10 border border-white/20 backdrop-blur flex flex-col items-center justify-center gap-2 text-center">
-            <span className="text-2xl" aria-hidden>{icon}</span>
-            <span className="text-xs line-clamp-2">{name}</span>
-          </button>
+          <ContextMenu key={id}>
+            <ContextMenuTrigger asChild>
+              <button onDoubleClick={() => onLaunch(id)} className="w-24 h-24 rounded-lg bg-white/10 hover:bg-white/15 border border-white/20 hover:border-white/30 backdrop-blur flex flex-col items-center justify-center gap-2 text-center shadow-sm">
+                <span className="text-2xl" aria-hidden>{icon}</span>
+                <span className="text-xs line-clamp-2">{name}</span>
+              </button>
+            </ContextMenuTrigger>
+            <ContextMenuContent>
+              <ContextMenuItem onClick={() => onLaunch(id)}>Open</ContextMenuItem>
+              <ContextMenuItem onClick={() => togglePin(id)}>{pinnedToTaskbar ? "Unpin from taskbar" : "Pin to taskbar"}</ContextMenuItem>
+              <ContextMenuSeparator />
+              <ContextMenuItem onClick={() => toggleDesktopPin(id)}>Remove from desktop</ContextMenuItem>
+            </ContextMenuContent>
+          </ContextMenu>
         );
       })}
     </div>
