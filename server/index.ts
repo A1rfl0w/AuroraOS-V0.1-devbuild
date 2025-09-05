@@ -2,6 +2,7 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import { handleDemo } from "./routes/demo";
+import { handleProxy } from "./routes/proxy";
 
 export function createServer() {
   const app = express();
@@ -18,6 +19,9 @@ export function createServer() {
   });
 
   app.get("/api/demo", handleDemo);
+
+  // AuroraOS proxy nodes (same logic, different labels for UI switching)
+  app.get("/api/proxy/:node", handleProxy);
 
   return app;
 }
